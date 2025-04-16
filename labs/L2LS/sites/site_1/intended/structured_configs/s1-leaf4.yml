@@ -1,0 +1,127 @@
+aaa_root:
+  disabled: true
+config_end: true
+enable_password:
+  disabled: true
+ethernet_interfaces:
+- name: Ethernet1
+  description: MLAG_s1-leaf3_Ethernet1
+  shutdown: false
+  channel_group:
+    id: 1
+    mode: active
+  peer: s1-leaf3
+  peer_interface: Ethernet1
+  peer_type: mlag_peer
+- name: Ethernet6
+  description: MLAG_s1-leaf3_Ethernet6
+  shutdown: false
+  channel_group:
+    id: 1
+    mode: active
+  peer: s1-leaf3
+  peer_interface: Ethernet6
+  peer_type: mlag_peer
+- name: Ethernet2
+  description: L2_s1-spine1_Ethernet5
+  shutdown: false
+  channel_group:
+    id: 2
+    mode: active
+  peer: s1-spine1
+  peer_interface: Ethernet5
+  peer_type: l3spine
+- name: Ethernet3
+  description: L2_s1-spine2_Ethernet5
+  shutdown: false
+  channel_group:
+    id: 2
+    mode: active
+  peer: s1-spine2
+  peer_interface: Ethernet5
+  peer_type: l3spine
+hostname: s1-leaf4
+ip_igmp_snooping:
+  globally_enabled: true
+is_deployed: true
+local_users:
+- name: arista
+  privilege: 15
+  role: network-admin
+  sha512_password: $6$arista$S3cA/plKAqLm3o2dT//Xephk46TonagHVlWftRY5J.24zG6pFfoEHauzpwMH57Spx9i7nDQraz6sfSWUJPSYQ1
+  ssh_key: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCrB4rgXTt3EGFzeuDu58tefLdNxafH2N9hFn2bxl9TXxrfVn9c9/EfW23an3gq8yNRkaiiVkZyP8gFw6syE4+ue/4HXM+pyAivN+gQPbSmT0idb1WLLSFswe5vBcPsTg3qGTQZ8P6S+wLBXXa0r7tBv6y9wlUdwymr5Ozgt2WjZnKUXDPZTnUL/ZcFBY10JtKHrRQkS/NMZt2mT9KRlUd18rTBjAzVUpA2cHVjQmEZ/0q0D7DsUW+U3Hnw6CW5pAWq7/Vox5K2/yBUyKwkF2ZNOqxN+LX3RwY7nXbG+Ui9XB1yOBnkDIENvcOo7DVnrMZ7KsAXItgQztIIOZM1xbUv
+    arista@toronto-workshop-14-9285da02-eos
+management_api_http:
+  enable_https: true
+  enable_vrfs:
+  - name: default
+management_interfaces:
+- name: Management0
+  description: OOB_MANAGEMENT
+  shutdown: false
+  vrf: default
+  ip_address: 192.168.0.15/24
+  type: oob
+  gateway: 192.168.0.1
+metadata:
+  platform: cEOS
+  fabric_name: SITE1_FABRIC
+mlag_configuration:
+  domain_id: RACK2
+  local_interface: Vlan4094
+  peer_address: 10.1.253.0
+  peer_link: Port-Channel1
+  reload_delay_mlag: '300'
+  reload_delay_non_mlag: '330'
+port_channel_interfaces:
+- name: Port-Channel1
+  description: MLAG_s1-leaf3_Port-Channel1
+  shutdown: false
+  switchport:
+    enabled: true
+    mode: trunk
+    trunk:
+      groups:
+      - MLAG
+- name: Port-Channel2
+  description: L2_SPINES_Port-Channel4
+  shutdown: false
+  mlag: 2
+  switchport:
+    enabled: true
+    mode: trunk
+    trunk:
+      allowed_vlan: none
+service_routing_protocols_model: multi-agent
+spanning_tree:
+  mode: mstp
+  mst_instances:
+  - id: '0'
+    priority: 16384
+  no_spanning_tree_vlan: '4094'
+static_routes:
+- vrf: default
+  destination_address_prefix: 0.0.0.0/0
+  gateway: 192.168.0.1
+transceiver_qsfp_default_mode_4x10: true
+vlan_interfaces:
+- name: Vlan4094
+  description: MLAG
+  shutdown: false
+  ip_address: 10.1.253.1/31
+  mtu: 1500
+  no_autostate: true
+vlan_internal_order:
+  allocation: ascending
+  range:
+    beginning: 1006
+    ending: 1199
+vlans:
+- id: 4094
+  name: MLAG
+  trunk_groups:
+  - MLAG
+  tenant: system
+vrfs:
+- name: default
+  ip_routing: false
